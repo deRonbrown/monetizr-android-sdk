@@ -1,7 +1,22 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.novoda.bintray-release'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+    }
+}
 
 android {
     compileSdkVersion 29
@@ -30,13 +45,19 @@ repositories {
     google()
     mavenCentral()
     jcenter()
+    flatDir {
+        dirs 'src/main/libs'
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation ('com.themonetizr.libaddressfork:libaddressfork:1.0.3'){
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    }
+    implementation 'io.github.tompee26:libaddressinput-android:1.0.0'
+
+    implementation(name:'volley-1.1.1', ext:'aar')
+//    implementation ('com.themonetizr.libaddressfork:libaddressfork:1.0.3'){
+//        exclude group: "com.google.code.findbugs", module: "jsr305"
+//    }
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -44,8 +65,7 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.android.volley:volley:1.1.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10"
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //noinspection GradleDependency
     implementation 'androidx.annotation:annotation:1.0.0'
@@ -58,20 +78,4 @@ dependencies {
     androidTestImplementation ('com.themonetizr.libaddressfork:libaddressfork:1.0.3') {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }
-}
-
-
-publish {
-
-    def groupProjectID = 'io.monetizr.monetizrsdk'
-    def artifactProjectID = 'MonetizrSDK'
-    def publishVersionID = '2.1.0'
-
-    userOrg = 'martins-jansevskis'
-    repoName = 'monetizr-android-sdk'
-    groupId = groupProjectID
-    artifactId = artifactProjectID
-    publishVersion = publishVersionID
-    desc = 'Monetizr Android SDK. Implementation project for Monetizr Android RESTful API client'
-    website = 'https://github.com/themonetizr/monetizr-android-sdk'
 }
